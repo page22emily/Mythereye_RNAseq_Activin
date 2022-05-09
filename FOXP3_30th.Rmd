@@ -93,9 +93,8 @@ res
 ```{r echo = FALSE}
 resOrdered <- res[order(res$pvalue),]
 
-write.csv(resOrdered, "/Desktop/")
+write.csv(x=resOrdered, file= "~/Desktop/FOXP3_30th_70th_percentile.csv")
 ```
-
 
 
 ```{r}
@@ -180,12 +179,27 @@ plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
 ```{r echo = FALSE}
 plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
 ```
+
 ```{r}
+vsd <- vst(dds, blind=FALSE)
 plotPCA(vsd, intgroup=c("condition"))
 ```
+
 ```{r}
-#DEG analysis from DESeq2 vignette 
-dds$condition <- factor(dds$condition, levels = c("Low","Intermediate", "High"))
-res <- results(dds, contrast=c("condition","High", "Low" ))
+ntd <- normTransform(dds)
+library("vsn")
+meanSdPlot(assay(ntd))
 ```
+
+
+```{r}
+library("pheatmap")
+select <- order(rowMeans(counts(dds,normalized=TRUE)),
+                decreasing=TRUE)[1:20]
+df <- as.data.frame(colData(dds)[,c("condition")])
+pheatmap(assay(ntd)[select,], cluster_rows=FALSE, show_rownames=TRUE,
+         cluster_cols=TRUE, annotation_col=df)
+```
+The 2 genes that how a difference in expression are IGKC and IGHG1
+
 
