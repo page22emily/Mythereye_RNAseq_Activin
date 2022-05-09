@@ -202,4 +202,12 @@ pheatmap(assay(ntd)[select,], cluster_rows=FALSE, show_rownames=TRUE,
 ```
 The 2 genes that how a difference in expression are IGKC and IGHG1
 
+```{r}
+resultsNames(dds)
+```
+
+```{r}
+plotDispEsts(dds)
+```
+
 

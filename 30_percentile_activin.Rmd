@@ -51,7 +51,7 @@ Eliz## Group 1: Tumor with Activin Grouping
 
 ```{r message= FALSE, warning= FALSE, echo = FALSE}
 dir <- "~/Desktop/quants"
-samples <- read.csv(file= "~/Desktop/meta_30_tumor_activin.csv")
+samples <- read.csv(file= "~/Desktop/Elizabeth/meta_30_tumor_activin.csv")
 files <- file.path(dir, samples$Sample, "quant.sf")
 all(file.exists(files))
 txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
@@ -62,7 +62,7 @@ names(txi)
 
 ```{r echo = FALSE}
 library(DESeq2)
-sample_meta_data <- read.csv(file= "~/Desktop/meta_30_tumor_activin.csv")
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth/meta_30_tumor_activin.csv")
 ```
 
 ```{r echo = FALSE}
@@ -197,7 +197,33 @@ plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
 ```{r echo = FALSE}
 plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
 ```
+```{r}
+vsd <- vst(dds, blind=FALSE)
+plotPCA(vsd, intgroup=c("condition"))
+```
 
+```{r}
+ntd <- normTransform(dds)
+library("vsn")
+meanSdPlot(assay(ntd))
+```
+
+```{r}
+library("pheatmap")
+select <- order(rowMeans(counts(dds,normalized=TRUE)),
+                decreasing=TRUE)[1:20]
+df <- as.data.frame(colData(dds)[,c("condition")])
+pheatmap(assay(ntd)[select,], cluster_rows=FALSE, show_rownames=TRUE,
+         cluster_cols=TRUE, annotation_col=df)
+```
+
+```{r}
+resultsNames(dds)
+```
+
+```{r}
+plotDispEsts(dds)
+```
 ## Group 2: Ascites with Activin Grouping 
 
 ## Logic/ Steps for Analysis 
@@ -213,7 +239,7 @@ plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
 
 ```{r message= FALSE, warning= FALSE, echo = FALSE}
 dir <- "~/Desktop/quants"
-samples <- read.csv(file= "~/Desktop/meta_30_ascites_activin.csv")
+samples <- read.csv(file= "~/Desktop/Elizabeth/meta_30_ascites_activin.csv")
 files <- file.path(dir, samples$Sample, "quant.sf")
 all(file.exists(files))
 txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
@@ -224,7 +250,7 @@ names(txi)
 
 ```{r echo = FALSE}
 library(DESeq2)
-sample_meta_data <- read.csv(file= "~/Desktop/meta_30_ascites_activin.csv")
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth/meta_30_ascites_activin.csv")
 ```
 
 ```{r echo = FALSE}
@@ -356,4 +382,32 @@ plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
 #### CD3G
 ```{r echo= FALSE}
 plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
+```
+
+```{r}
+vsd <- vst(dds, blind=FALSE)
+plotPCA(vsd, intgroup=c("condition"))
+```
+
+```{r}
+ntd <- normTransform(dds)
+library("vsn")
+meanSdPlot(assay(ntd))
+```
+
+```{r}
+library("pheatmap")
+select <- order(rowMeans(counts(dds,normalized=TRUE)),
+                decreasing=TRUE)[1:20]
+df <- as.data.frame(colData(dds)[,c("condition")])
+pheatmap(assay(ntd)[select,], cluster_rows=FALSE, show_rownames=TRUE,
+         cluster_cols=TRUE, annotation_col=df)
+```
+
+```{r}
+resultsNames(dds)
+```
+
+```{r}
+plotDispEsts(dds)
 ```
