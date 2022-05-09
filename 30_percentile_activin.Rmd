@@ -1,0 +1,359 @@
+---
+title: "30_percentile_Activin"
+output: html_document
+date: '2022-05-05'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message= FALSE, warning= FALSE}
+library(tximport)
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(DESeq2)
+library(ggplot2)
+```
+# Analysis for RNAseq Elizabeth's Project 
+
+## Logic/ Steps for Analysis 
+
+-  After Initial Analysis with DeSeq2, Tumor vs Benign counts were used to determine Activin Ranking
+    - 1st, normalized counts were used from DeSeq2 that were saved in the previous steps
+    2nd, genes were pulled from that list and the ranges for the counts were used to calculate the percentiles 
+    30th Percentile: 8.58 (Low Activin)
+    70th Percentile: 10.82 (High Activin)
+    between 30th and 70th Percentile: Intermediate Activin 
+    
+    Then only the Ascites and Tumor groups were pulled (no normal samples were in this)
+
+
+```{r message= FALSE, warning= FALSE, echo = FALSE}
+library(tximport)
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(DESeq2)
+```
+
+
+```{r message= FALSE, warning= FALSE, echo = FALSE}
+#tx2gene is formatted to add gene names and required for DESeq2. This only has to be done once for this analysis
+txdb <- makeTxDbFromGFF(file="~/Downloads/gencode.v19.annotation.gtf")
+saveDb(x=txdb, file = "gencode.v19.annotation.gtf_withproteinids.TxDb")
+k <- keys(txdb, keytype = "TXNAME")
+tx2gene <- select(txdb, k, "GENEID", "TXNAME")
+```
+
+Eliz## Group 1: Tumor with Activin Grouping 
+
+### Part 1: Setup
+
+```{r message= FALSE, warning= FALSE, echo = FALSE}
+dir <- "~/Desktop/quants"
+samples <- read.csv(file= "~/Desktop/meta_30_tumor_activin.csv")
+files <- file.path(dir, samples$Sample, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+```
+
+### Part 2: DESeq2 for Tumor vs Benign 
+
+```{r echo = FALSE}
+library(DESeq2)
+sample_meta_data <- read.csv(file= "~/Desktop/meta_30_tumor_activin.csv")
+```
+
+```{r echo = FALSE}
+sampleFiles <- samples$Sample
+sampleCondition <- sample_meta_data$Activin
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r echo = FALSE}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+```{r message= FALSE, warning= FALSE, echo = FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~1)
+```
+
+```{r message= FALSE, warning= FALSE, echo = FALSE}
+dds <- DESeq(dds)
+```
+
+```{r}
+res <- results(dds)
+res
+```
+
+```{r echo = FALSE}
+resOrdered <- res[order(res$pvalue),]
+```
+
+```{r}
+summary(res)
+```
+
+```{r}
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+```
+
+```{r echo = FALSE}
+plotMA(res, ylim=c(-2,2))
+```
+
+```{r echo = FALSE}
+plotMA(res05, ylim=c(-2,2))
+```
+
+### Graphs for Genes of Interest
+
+-   Each circle is a sample in the respective group
+
+-   X axis: group
+
+-   Y axis: Counts
+
+#### INHBA
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000122641.9", intgroup="condition")
+```
+
+
+
+#### ACVR2A
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000121989.10", intgroup="condition")
+```
+
+#### ACVR2B
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000114739.9", intgroup="condition")
+```
+
+#### FOXP3
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000049768.10", intgroup="condition")
+```
+
+#### p53
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000141510.11", intgroup="condition")
+```
+
+#### BRCA1
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000012048.15", intgroup="condition")
+```
+
+#### BRCA2
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000139618.10", intgroup="condition")
+```
+
+#### INHBB
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000163083.5", intgroup="condition")
+```
+
+#### ACVR1B
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000135503.8", intgroup="condition")
+```
+
+#### ACVR1C
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000123612.11", intgroup="condition")
+```
+
+#### TGFB1
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000105329.5", intgroup="condition")
+```
+
+#### CD8A
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
+```
+
+#### CD3G
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
+```
+
+## Group 2: Ascites with Activin Grouping 
+
+## Logic/ Steps for Analysis 
+
+-  After Iniital Analysis with DeSeq2, Ascites vs Benign counts were used to determine Activin Ranking
+    - 1st, normalized counts were used from DeSeq2 that were saved in the previous steps
+    2nd, genes were pulled from that list and the ranges for the counts were used to calculate the percentiles 
+    30th Percentile: 5.77 (Low Activin)
+    70th Percentile: 7.72 (High Activin)
+    between 30th and 70th Percentile: Intermediate Activin 
+
+### Part 1: Setup
+
+```{r message= FALSE, warning= FALSE, echo = FALSE}
+dir <- "~/Desktop/quants"
+samples <- read.csv(file= "~/Desktop/meta_30_ascites_activin.csv")
+files <- file.path(dir, samples$Sample, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+```
+
+### Part 2: DESeq2 for Tumor vs Benign 
+
+```{r echo = FALSE}
+library(DESeq2)
+sample_meta_data <- read.csv(file= "~/Desktop/meta_30_ascites_activin.csv")
+```
+
+```{r echo = FALSE}
+sampleFiles <- samples$Sample
+sampleCondition <- sample_meta_data$Activin
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r echo = FALSE}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+```{r message= FALSE, warning= FALSE, echo = FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~1)
+```
+
+```{r message= FALSE, warning= FALSE, echo = FALSE}
+dds <- DESeq(dds)
+```
+
+```{r}
+res <- results(dds)
+res
+```
+
+```{r echo = FALSE}
+resOrdered <- res[order(res$pvalue),]
+```
+
+```{r}
+summary(res)
+```
+
+```{r}
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+```
+
+```{r echo = FALSE}
+plotMA(res, ylim=c(-2,2))
+```
+
+```{r echo = FALSE}
+plotMA(res05, ylim=c(-2,2))
+```
+
+### Graphs for Genes of Interest
+
+-   Each circle is a sample in the respective group
+
+-   X axis: group
+
+-   Y axis: Counts
+
+#### INHBA
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000122641.9", intgroup="condition")
+```
+
+#### ACVR2A
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000121989.10", intgroup="condition")
+```
+
+#### ACVR2B
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000114739.9", intgroup="condition")
+```
+
+#### FOXP3
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000049768.10", intgroup="condition")
+```
+
+#### p53
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000141510.11", intgroup="condition")
+```
+
+#### BRCA1
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000012048.15", intgroup="condition")
+```
+
+#### BRCA2
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000139618.10", intgroup="condition")
+```
+
+#### INHBB
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000163083.5", intgroup="condition")
+```
+
+#### ACVR1B
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000135503.8", intgroup="condition")
+```
+
+#### ACVR1C
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000123612.11", intgroup="condition")
+```
+
+#### TGFB1
+
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000105329.5", intgroup="condition")
+```
+
+#### CD8A
+```{r echo = FALSE}
+plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
+```
+
+#### CD3G
+```{r echo= FALSE}
+plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
+```

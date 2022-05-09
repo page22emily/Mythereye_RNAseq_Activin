@@ -1,0 +1,703 @@
+---
+title: "Deseq2_tximport"
+output: html_document
+date: '2022-05-02'
+---
+
+# Analysis for RNAseq Elizabeth's Project
+
+## Logic/ Steps for Analysis
+
+-   Download from SRA using GEO
+
+    -   GSE143897
+
+    -   SRA meta data and accession list were also downloaded
+
+    -   Done on Cheaha
+
+-   Formatted with FASTQ using SRA toolkit
+
+    -   Done on Cheaha
+
+-   Used Salmon for alignment for count data
+
+    -   Done on Cheaha
+
+    -   Focus was for counts
+
+    -   Did not need variants so I did not use STAR aligner
+
+-   Tximport is a package to import count data from Salmon so that they can be imported into DESeq2
+
+    -   Mike Love's (author for most of the well used RNAseq packages) guide uses either tximport or txmeta
+
+    -   tximport was the suggestion from Lara Ianov when txmeta did not cooperate with the merge off Cheaha and onto local computer
+
+    -   This was done with R and R Studio on my local Mac
+
+-   DESeq2 is the standard publication wise for normalizing counts
+
+    -   This was done with R and R Studio on my local Mac
+
+    -   Standard for normalization and analysis in most publications
+
+    -   Did the following groups
+
+        -   Platinum vs Control
+
+        -   Tumor vs Ascites vs Control
+
+        -   Tumor vs Benign
+
+        -   Tumor vs Ascites
+
+    -   Includes graphs for each gene of interest for each comparison group
+
+Set up:
+
+```{r message= FALSE, warning= FALSE}
+library(tximport)
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(DESeq2)
+```
+
+tx2gene is formatted to add gene names and required for DESeq2. This only has to be done once for this analysis
+
+```{r message= FALSE, warning= FALSE}
+txdb <- makeTxDbFromGFF(file="~/Downloads/gencode.v19.annotation.gtf")
+saveDb(x=txdb, file = "gencode.v19.annotation.gtf_withproteinids.TxDb")
+k <- keys(txdb, keytype = "TXNAME")
+tx2gene <- select(txdb, k, "GENEID", "TXNAME")
+```
+
+## Group 1: Tumor, Ascites, and Control
+
+## Control vs Platinum
+
+### Part 1: Setup
+
+```{r message= FALSE, warning= FALSE}
+dir <- "~/Desktop/quants"
+samples <- read.csv(file= "~/Desktop/sample_info_tximport.csv")
+files <- file.path(dir, samples$SRR, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+```
+
+### Part 2: DESeq2 for Control vs Platinum
+
+```{r message= FALSE, warning= FALSE}
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth_Sample_meta.csv")
+sampleFiles <- samples$SRR
+sampleCondition <- sample_meta_data$Treatment
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+```{r message= FALSE, warning= FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+```
+
+```{r message= FALSE, warning= FALSE}
+dds <- DESeq(dds)
+```
+
+```{r}
+res <- results(dds)
+res
+```
+
+```{r}
+resOrdered <- res[order(res$pvalue),]
+```
+
+```{r}
+summary(res)
+```
+
+```{r}
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+```
+
+```{r}
+plotMA(res, ylim=c(-2,2))
+```
+
+```{r}
+plotMA(res05, ylim=c(-2,2))
+```
+
+### Graphs for Genes of Interest
+
+-   Each circle is a sample in the respective group
+
+-   X axis: group
+
+-   Y axis: Counts
+
+#### INHBA
+
+```{r}
+plotCounts(dds, gene= "ENSG00000122641.9", intgroup="condition")
+```
+
+#### ACVR2A
+
+```{r}
+plotCounts(dds, gene= "ENSG00000121989.10", intgroup="condition")
+```
+
+#### ACVR2B
+
+```{r}
+plotCounts(dds, gene= "ENSG00000114739.9", intgroup="condition")
+```
+
+#### FOXP3
+
+```{r}
+plotCounts(dds, gene= "ENSG00000049768.10", intgroup="condition")
+```
+
+#### p53
+
+```{r}
+plotCounts(dds, gene= "ENSG00000141510.11", intgroup="condition")
+```
+
+#### BRCA1
+
+```{r}
+plotCounts(dds, gene= "ENSG00000012048.15", intgroup="condition")
+```
+
+#### BRCA2
+
+```{r}
+plotCounts(dds, gene= "ENSG00000139618.10", intgroup="condition")
+```
+
+#### INHBB
+
+```{r}
+plotCounts(dds, gene= "ENSG00000163083.5", intgroup="condition")
+```
+
+#### ACVR1B
+
+```{r}
+plotCounts(dds, gene= "ENSG00000135503.8", intgroup="condition")
+```
+
+#### ACVR1C
+
+```{r}
+plotCounts(dds, gene= "ENSG00000123612.11", intgroup="condition")
+```
+
+#### TGFB1
+
+```{r}
+plotCounts(dds, gene= "ENSG00000105329.5", intgroup="condition")
+```
+
+#### CD8A
+
+```{r}
+plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
+```
+
+#### CD3G
+
+```{r}
+plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
+```
+
+```{r message= FALSE, warning= FALSE}
+write.csv(as.data.frame(resOrdered), 
+          file="~/Desktop/platinum_vs_control.csv")
+
+vsd <- varianceStabilizingTransformation(dds)
+write.csv(assay(vsd), file="~/Desktop/counts_platinum_vs_control.csv", sep="\t")
+```
+
+## Tumor vs Ascites vs Control
+
+### Part 1: Set up
+
+```{r message= FALSE, warning= FALSE}
+sampleFiles <- samples$SRR
+sampleCondition <- sample_meta_data$Tumor..Normal
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+### Part 2: DESeq2 for Tumor vs Ascites vs Control
+
+```{r message= FALSE, warning= FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+```
+
+```{r message= FALSE, warning= FALSE}
+dds <- DESeq(dds)
+```
+
+```{r}
+res <- results(dds)
+res
+```
+
+```{r}
+resOrdered <- res[order(res$pvalue),]
+```
+
+```{r}
+summary(res)
+```
+
+```{r}
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+```
+
+```{r}
+plotMA(res, ylim=c(-2,2))
+```
+
+```{r}
+plotMA(res05, ylim=c(-2,2))
+```
+
+### Graphs for Genes of Interest
+
+-   Each circle is a sample in the respective group
+
+-   X axis: group
+
+-   Y axis: Counts
+
+#### INHBA
+
+```{r}
+plotCounts(dds, gene= "ENSG00000122641.9", intgroup="condition")
+```
+
+#### ACVR2A
+
+```{r}
+plotCounts(dds, gene= "ENSG00000121989.10", intgroup="condition")
+```
+
+#### ACVR2B
+
+```{r}
+plotCounts(dds, gene= "ENSG00000114739.9", intgroup="condition")
+```
+
+#### FOXP3
+
+```{r}
+plotCounts(dds, gene= "ENSG00000049768.10", intgroup="condition")
+```
+
+#### p53
+
+```{r}
+plotCounts(dds, gene= "ENSG00000141510.11", intgroup="condition")
+```
+
+#### BRCA1
+
+```{r}
+plotCounts(dds, gene= "ENSG00000012048.15", intgroup="condition")
+```
+
+#### BRCA2
+
+```{r}
+plotCounts(dds, gene= "ENSG00000139618.10", intgroup="condition")
+```
+
+#### INHBB
+
+```{r}
+plotCounts(dds, gene= "ENSG00000163083.5", intgroup="condition")
+```
+
+#### ACVR1B
+
+```{r}
+plotCounts(dds, gene= "ENSG00000135503.8", intgroup="condition")
+```
+
+#### ACVR1C
+
+```{r}
+plotCounts(dds, gene= "ENSG00000123612.11", intgroup="condition")
+```
+
+#### TGFB1
+
+```{r}
+plotCounts(dds, gene= "ENSG00000105329.5", intgroup="condition")
+```
+
+#### CD8A
+
+```{r}
+plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
+```
+
+#### CD3G
+
+```{r}
+plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
+```
+
+Saving the normalized count files
+
+```{r}
+write.csv(as.data.frame(resOrdered), 
+          file="~/Desktop/tumor_vs_benign_vs_ascites.csv")
+
+vsd <- varianceStabilizingTransformation(dds)
+write.csv(assay(vsd), file="~/Desktop/counts_tumor_vs_benign_vs_ascites.csv", sep="\t")
+```
+
+## Group 2: Tumor vs Benign
+
+### Part 1: Setup
+
+```{r message= FALSE, warning= FALSE}
+dir <- "~/Desktop/quants"
+samples <- read.csv(file= "~/Desktop/data_import_benign_vs_tumor.csv")
+files <- file.path(dir, samples$SRR, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+```
+
+### Part 2: DESeq2 for Tumor vs Benign
+
+```{r}
+library(DESeq2)
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth_meta_benign_vs_tumor.csv")
+```
+
+```{r}
+sampleFiles <- samples$SRR
+sampleCondition <- sample_meta_data$Tumor..Normal
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+```{r message= FALSE, warning= FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+```
+
+```{r message= FALSE, warning= FALSE}
+dds <- DESeq(dds)
+```
+
+```{r}
+res <- results(dds)
+res
+```
+
+```{r}
+resOrdered <- res[order(res$pvalue),]
+```
+
+```{r}
+summary(res)
+```
+
+```{r}
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+```
+
+```{r}
+plotMA(res, ylim=c(-2,2))
+```
+
+```{r}
+plotMA(res05, ylim=c(-2,2))
+```
+
+### Graphs for Genes of Interest
+
+-   Each circle is a sample in the respective group
+
+-   X axis: group
+
+-   Y axis: Counts
+
+#### INHBA
+
+```{r}
+plotCounts(dds, gene= "ENSG00000122641.9", intgroup="condition")
+```
+
+#### ACVR2A
+
+```{r}
+plotCounts(dds, gene= "ENSG00000121989.10", intgroup="condition")
+```
+
+#### ACVR2B
+
+```{r}
+plotCounts(dds, gene= "ENSG00000114739.9", intgroup="condition")
+```
+
+#### FOXP3
+
+```{r}
+plotCounts(dds, gene= "ENSG00000049768.10", intgroup="condition")
+```
+
+#### p53
+
+```{r}
+plotCounts(dds, gene= "ENSG00000141510.11", intgroup="condition")
+```
+
+#### BRCA1
+
+```{r}
+plotCounts(dds, gene= "ENSG00000012048.15", intgroup="condition")
+```
+
+#### BRCA2
+
+```{r}
+plotCounts(dds, gene= "ENSG00000139618.10", intgroup="condition")
+```
+
+#### INHBB
+
+```{r}
+plotCounts(dds, gene= "ENSG00000163083.5", intgroup="condition")
+```
+
+#### ACVR1B
+
+```{r}
+plotCounts(dds, gene= "ENSG00000135503.8", intgroup="condition")
+```
+
+#### ACVR1C
+
+```{r}
+plotCounts(dds, gene= "ENSG00000123612.11", intgroup="condition")
+```
+
+#### TGFB1
+
+```{r}
+plotCounts(dds, gene= "ENSG00000105329.5", intgroup="condition")
+```
+
+#### CD8A
+
+```{r}
+plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
+```
+
+#### CD3G
+
+```{r}
+plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
+```
+
+```{r message= FALSE, warning= FALSE}
+write.csv(as.data.frame(resOrdered), 
+          file="~/Desktop/tumor_vs_normal.csv")
+
+vsd <- varianceStabilizingTransformation(dds)
+write.csv(assay(vsd), file="~/Desktop/counts_tumor_vs_normal.csv", sep="\t")
+```
+
+## Group 3: Ascites vs Benign
+
+### Part 1: Setup
+
+```{r message= FALSE, warning= FALSE}
+dir <- "~/Desktop/quants"
+samples <- read.csv(file= "~/Desktop/data_import_ascites_vs_normal.csv")
+files <- file.path(dir, samples$SRR, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+```
+
+```{r}
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth_meta_ascites_vs_normal.csv")
+```
+
+```{r message= FALSE, warning= FALSE}
+sampleFiles <- samples$SRR
+sampleCondition <- sample_meta_data$Tumor..Normal
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+### Part 2: DEseq2 for Ascites vs Benign
+
+```{r message= FALSE, warning= FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+```
+
+```{r message= FALSE, warning= FALSE}
+dds <- DESeq(dds)
+```
+
+```{r}
+res <- results(dds)
+res
+```
+
+```{r}
+resOrdered <- res[order(res$pvalue),]
+```
+
+```{r}
+summary(res)
+```
+
+```{r}
+res05 <- results(dds, alpha=0.05)
+summary(res05)
+```
+
+```{r}
+plotMA(res, ylim=c(-2,2))
+```
+
+```{r}
+plotMA(res05, ylim=c(-2,2))
+```
+
+### Graphs for Genes of Interest
+
+-   Each circle is a sample in the respective group
+
+-   X axis: group
+
+-   Y axis: Counts
+
+#### INHBA
+
+```{r}
+plotCounts(dds, gene= "ENSG00000122641.9", intgroup="condition")
+```
+
+#### ACVR2A
+
+```{r}
+plotCounts(dds, gene= "ENSG00000121989.10", intgroup="condition")
+```
+
+#### ACVR2B
+
+```{r}
+plotCounts(dds, gene= "ENSG00000114739.9", intgroup="condition")
+```
+
+#### FOXP3
+
+```{r}
+plotCounts(dds, gene= "ENSG00000049768.10", intgroup="condition")
+```
+
+#### p53
+
+```{r}
+plotCounts(dds, gene= "ENSG00000141510.11", intgroup="condition")
+```
+
+#### BRCA1
+
+```{r}
+plotCounts(dds, gene= "ENSG00000012048.15", intgroup="condition")
+```
+
+#### BRCA2
+
+```{r}
+plotCounts(dds, gene= "ENSG00000139618.10", intgroup="condition")
+```
+
+#### INHBB
+
+```{r}
+plotCounts(dds, gene= "ENSG00000163083.5", intgroup="condition")
+```
+
+#### ACVR1B
+
+```{r}
+plotCounts(dds, gene= "ENSG00000135503.8", intgroup="condition")
+```
+
+#### ACVR1C
+
+```{r}
+plotCounts(dds, gene= "ENSG00000123612.11", intgroup="condition")
+```
+
+#### TGFB1
+
+```{r}
+plotCounts(dds, gene= "ENSG00000105329.5", intgroup="condition")
+```
+
+#### CD8A
+
+```{r}
+plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
+```
+
+#### CD3G
+
+```{r}
+plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
+```
+
+Saving normalized count files
+
+```{r message= FALSE, warning= FALSE}
+write.csv(as.data.frame(resOrdered), 
+          file="~/Desktop/ascites_vs_normal.csv")
+vsd <- varianceStabilizingTransformation(dds)
+write.csv(assay(vsd), file="~/Desktop/counts_ascites_vs_normal.csv", sep="\t")
+```
