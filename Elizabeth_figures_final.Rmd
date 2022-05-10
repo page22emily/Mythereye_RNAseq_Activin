@@ -1,0 +1,276 @@
+---
+title: "Figures_Elizabeth_Final"
+output: html_document
+date: '2022-05-10'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+library(tximport)
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(DESeq2)
+library(tibble)
+library(ggplot2)
+
+txdb <- makeTxDbFromGFF(file="~/Downloads/gencode.v19.annotation.gtf")
+saveDb(x=txdb, file = "gencode.v19.annotation.gtf_withproteinids.TxDb")
+k <- keys(txdb, keytype = "TXNAME")
+tx2gene <- select(txdb, k, "GENEID", "TXNAME")
+dir <- "~/Desktop/quants"
+samples <- read.csv(file= "~/Desktop/Elizabeth/data_import_benign_vs_tumor.csv")
+files <- file.path(dir, samples$SRR, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth/Elizabeth_meta_benign_vs_tumor.csv")
+sampleFiles <- samples$SRR
+sampleCondition <- sample_meta_data$Tumor..Normal
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+dds <- DESeq(dds)
+res <- results(dds)
+```
+
+
+#### INHBA
+```{r}
+counts <- counts(dds['ENSG00000122641.9',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of INHBA")
+q
+```
+
+#### ACVR2A
+```{r}
+counts <- counts(dds['ENSG00000121989.10',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of ACVR2A")
+q
+```
+
+#### ACVR2B
+```{r}
+counts <- counts(dds['ENSG00000114739.9',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of ACVR2B")
+q
+```
+
+#### FOXP3
+```{r}
+counts <- counts(dds['ENSG00000049768.10',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of FOXP3")
+q
+```
+
+#### INHBB
+```{r}
+counts <- counts(dds['ENSG00000163083.5',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of INHBB")
+q
+```
+
+#### ACVR1B
+```{r}
+counts <- counts(dds['ENSG00000135503.8',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of ACVR1B")
+q
+```
+
+#### ACVR1C
+```{r}
+counts <- counts(dds['ENSG00000123612.11',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of ACVR1C")
+q
+```
+
+#### CD8A
+```{r}
+counts <- counts(dds['ENSG00000153563.11',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD8A")
+q
+```
+
+#### CD3G
+```{r}
+counts <- counts(dds['ENSG00000160654.5',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD3G")
+q
+```
+#### MMP3 
+```{r}
+counts <- counts(dds['ENSG00000149968.7',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of MMP3")
+q
+```
+#### MMP13
+```{r}
+counts <- counts(dds['ENSG00000137745.7',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of MMP13")
+q
+```
+#ACTIVIN
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dir <- "~/Desktop/quants"
+samples <- read.csv(file= "~/Desktop/Elizabeth/meta_30_tumor_activin.csv")
+files <- file.path(dir, samples$Sample, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth/meta_30_tumor_activin.csv")
+sampleFiles <- samples$Sample
+sampleCondition <- sample_meta_data$Activin
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+dds <- DESeq(dds)
+res <- results(dds)
+```
+
+
+#### INHBA
+```{r}
+counts <- counts(dds['ENSG00000122641.9',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of INHBA")
+q
+```
+
+#### ACVR2A
+```{r}
+counts <- counts(dds['ENSG00000121989.10',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of ACVR2A")
+q
+```
+
+#### ACVR2B
+```{r}
+counts <- counts(dds['ENSG00000114739.9',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of ACVR2B")
+q
+```
+
+#### FOXP3
+```{r}
+counts <- counts(dds['ENSG00000049768.10',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of FOXP3")
+q
+```
+
+#### INHBB
+```{r}
+counts <- counts(dds['ENSG00000163083.5',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of INHBB")
+q
+```
+
+#### ACVR1B
+```{r}
+counts <- counts(dds['ENSG00000135503.8',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of ACVR1B")
+q
+```
+
+#### ACVR1C
+```{r}
+counts <- counts(dds['ENSG00000123612.11',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of ACVR1C")
+q
+```
+
+#### CD8A
+```{r}
+counts <- counts(dds['ENSG00000153563.11',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD8A")
+q
+```
+
+#### CD3G
+```{r}
+counts <- counts(dds['ENSG00000160654.5',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD3G")
+q
+```
+#### MMP3 
+```{r}
+counts <- counts(dds['ENSG00000149968.7',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of MMP3")
+q
+```
+#### MMP13
+```{r}
+counts <- counts(dds['ENSG00000137745.7',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of MMP13")
+q
+```

@@ -391,7 +391,7 @@ names(txi)
 
 ```{r echo=FALSE}
 library(DESeq2)
-sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth_meta_benign_vs_tumor.csv")
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth/Elizabeth_meta_benign_vs_tumor.csv")
 ```
 
 ```{r echo=FALSE}
