@@ -79,7 +79,7 @@ colnames(txi$counts) <- rownames(sampleTable)
 ```
 
 ```{r message= FALSE, warning= FALSE, echo = FALSE}
-dds <- DESeqDataSetFromTximport(txi, sampleTable, ~1)
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
 ```
 
 ```{r message= FALSE, warning= FALSE, echo = FALSE}
@@ -224,6 +224,13 @@ resultsNames(dds)
 ```{r}
 plotDispEsts(dds)
 ```
+```{r echo = FALSE}
+resOrdered <- res[order(res$pvalue),]
+
+write.csv(x=resOrdered, file= "~/Desktop/Tumor_Activin_30th_70th_percentile.csv")
+```
+
+
 ## Group 2: Ascites with Activin Grouping 
 
 ## Logic/ Steps for Analysis 
@@ -267,7 +274,7 @@ colnames(txi$counts) <- rownames(sampleTable)
 ```
 
 ```{r message= FALSE, warning= FALSE, echo = FALSE}
-dds <- DESeqDataSetFromTximport(txi, sampleTable, ~1)
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
 ```
 
 ```{r message= FALSE, warning= FALSE, echo = FALSE}
@@ -410,4 +417,11 @@ resultsNames(dds)
 
 ```{r}
 plotDispEsts(dds)
+```
+
+
+```{r echo = FALSE}
+resOrdered <- res[order(res$pvalue),]
+
+write.csv(x=resOrdered, file= "~/Desktop/Ascites_Activin_30th_70th_percentile.csv")
 ```
