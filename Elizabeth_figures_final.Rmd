@@ -48,6 +48,9 @@ q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
 q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of INHBA")
 q
 ```
+```{r}
+write.csv(counts, "~/Desktop/counts_INHBA_cancervsbenign.csv")
+```
 
 #### ACVR2A
 ```{r}
@@ -146,15 +149,35 @@ q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
 q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of MMP13")
 q
 ```
+#### CD4
+```{r}
+counts <- counts(dds['ENSG00000010610.5',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD4")
+q
+```
+
+#### CD25/ ILR2A
+```{r}
+counts <- counts(dds['ENSG00000134460.11',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD25/ ILR2A")
+q
+```
+
 #ACTIVIN
 ```{r message= FALSE, warning= FALSE, echo=FALSE}
 dir <- "~/Desktop/quants"
-samples <- read.csv(file= "~/Desktop/Elizabeth/meta_30_tumor_activin.csv")
+samples <- read.csv(file= "~/Desktop/Elizabeth/meta_30_tumor_activin_update.csv")
 files <- file.path(dir, samples$Sample, "quant.sf")
 all(file.exists(files))
 txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
 names(txi)
-sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth/meta_30_tumor_activin.csv")
+sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth/meta_30_tumor_activin_update.csv")
 sampleFiles <- samples$Sample
 sampleCondition <- sample_meta_data$Activin
 sampleTable <- data.frame(sampleName = sampleFiles,
@@ -176,6 +199,9 @@ q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
 q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of INHBA")
 q
 ```
+```{r}
+write.csv(counts, "~/Desktop/counts_INHBA_Activin.csv")
+```
 
 #### ACVR2A
 ```{r}
@@ -256,6 +282,7 @@ q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
 q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD3G")
 q
 ```
+
 #### MMP3 
 ```{r}
 counts <- counts(dds['ENSG00000149968.7',], normalized = TRUE)
@@ -265,6 +292,7 @@ q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
 q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of MMP3")
 q
 ```
+
 #### MMP13
 ```{r}
 counts <- counts(dds['ENSG00000137745.7',], normalized = TRUE)
@@ -272,5 +300,25 @@ m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
 q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
 q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of MMP13")
+q
+```
+
+#### CD4
+```{r}
+counts <- counts(dds['ENSG00000010610.5',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD4")
+q
+```
+
+#### CD25/ ILR2A
+```{r}
+counts <- counts(dds['ENSG00000134460.11',], normalized = TRUE)
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot() + geom_jitter(width = 0.1)
+q <- q + labs(x = "Experimental Group", y = "Normalized Counts ", title = "Normalized Expression of CD25/ ILR2A")
 q
 ```
