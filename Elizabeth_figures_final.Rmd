@@ -56,12 +56,13 @@ counts <- counts(dds['ENSG00000122641.9',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
-q <- q + labs(y = "Normalized Counts ", title = "Expression of INHBA")
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
+q <- q + labs(y = "Normalized Counts", title = "Expression of INHBA")
 q
 ```
 ```{r}
-#write.csv(counts, "~/Desktop/counts_INHBA_cancervsbenign.csv")
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_INHBA.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_INHBA.csv")
 ```
 
 #### ACVR2A
@@ -70,9 +71,13 @@ counts <- counts(dds['ENSG00000121989.10',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of ACVR2A")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_ACVR2A.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_ACVR2A.csv")
 ```
 
 #### ACVR2B
@@ -81,9 +86,13 @@ counts <- counts(dds['ENSG00000114739.9',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of ACVR2B")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_ACVR2B.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_ACVR2B.csv")
 ```
 
 #### FOXP3
@@ -92,9 +101,13 @@ counts <- counts(dds['ENSG00000049768.10',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of FOXP3")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_FOXP3.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_FOXP3.csv")
 ```
 
 #### INHBB
@@ -103,9 +116,13 @@ counts <- counts(dds['ENSG00000163083.5',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of INHBB")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_INHBB.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_INHBB.csv")
 ```
 
 #### ACVR1B
@@ -114,9 +131,13 @@ counts <- counts(dds['ENSG00000135503.8',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of ACVR1B")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_ACVR1B.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_ACVR1B.csv")
 ```
 
 #### ACVR1C
@@ -125,9 +146,13 @@ counts <- counts(dds['ENSG00000123612.11',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of ACVR1C")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_ACVR1C.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_ACVR1C.csv")
 ```
 
 #### CD8A
@@ -136,9 +161,13 @@ counts <- counts(dds['ENSG00000153563.11',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of CD8A")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_CD8A.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_CD8A.csv")
 ```
 
 #### CD3G
@@ -147,39 +176,58 @@ counts <- counts(dds['ENSG00000160654.5',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of CD3G")
 q
 ```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_CD3G.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_CD3G.csv")
+```
+
 #### MMP3 
 ```{r}
 counts <- counts(dds['ENSG00000149968.7',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of MMP3")
 q
 ```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_MMP3.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_MMP3.csv")
+```
+
 #### MMP13
 ```{r}
 counts <- counts(dds['ENSG00000137745.7',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of MMP13")
 q
 ```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_MMP13.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_MMP13.csv")
+```
+
 #### CD4
 ```{r}
 counts <- counts(dds['ENSG00000010610.5',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression of CD4")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_CD4.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_CD4.csv")
 ```
 
 #### CD25/ ILR2A
@@ -188,9 +236,13 @@ counts <- counts(dds['ENSG00000134460.11',], normalized = TRUE)
 col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(y = "Normalized Counts ", title = "Expression CD25/ ILR2A")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/benign_tumor_CD25.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_benign_tumor_CD25.csv")
 ```
 
 #ACTIVIN
@@ -219,12 +271,13 @@ counts <- counts(dds['ENSG00000122641.9',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of INHBA")
 q
 ```
 ```{r}
-#write.csv(counts, "~/Desktop/counts_INHBA_Activin.csv")
+ggsave("~/Desktop/Elizabeth_Figures/activin_INHBA.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_INHBA.csv")
 ```
 
 #### ACVR2A
@@ -233,9 +286,13 @@ counts <- counts(dds['ENSG00000121989.10',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of ACVR2A")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_ACVR2A.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_ACVR2A.csv")
 ```
 
 #### ACVR2B
@@ -244,9 +301,13 @@ counts <- counts(dds['ENSG00000114739.9',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of ACVR2B")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_ACVR2B.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_ACVR2B.csv")
 ```
 
 #### FOXP3
@@ -255,9 +316,13 @@ counts <- counts(dds['ENSG00000049768.10',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of FOXP3")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_FOXP3.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_FOXP3.csv")
 ```
 
 #### INHBB
@@ -266,9 +331,13 @@ counts <- counts(dds['ENSG00000163083.5',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of INHBB")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_INHBB.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_INHBB.csv")
 ```
 
 #### ACVR1B
@@ -277,9 +346,13 @@ counts <- counts(dds['ENSG00000135503.8',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of ACVR1B")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_ACVR1B.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_ACVR1B.csv")
 ```
 
 #### ACVR1C
@@ -288,9 +361,13 @@ counts <- counts(dds['ENSG00000123612.11',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of ACVR1C")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_ACVR1C.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_ACVR1C.csv")
 ```
 
 #### CD8A
@@ -299,9 +376,13 @@ counts <- counts(dds['ENSG00000153563.11',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of CD8A")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_CD8A.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_CD8A.csv")
 ```
 
 #### CD3G
@@ -310,9 +391,13 @@ counts <- counts(dds['ENSG00000160654.5',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of CD3G")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_CD3G.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_CD3G.csv")
 ```
 
 #### MMP3 
@@ -321,9 +406,13 @@ counts <- counts(dds['ENSG00000149968.7',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of MMP3")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_MMP3.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_MMP3.csv")
 ```
 
 #### MMP13
@@ -332,9 +421,13 @@ counts <- counts(dds['ENSG00000137745.7',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of MMP13")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_MMP13.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_MMP13.csv")
 ```
 
 #### CD4
@@ -343,9 +436,13 @@ counts <- counts(dds['ENSG00000010610.5',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of CD4")
 q
+```
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_CD4.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_CD4.csv")
 ```
 
 #### CD25/ ILR2A
@@ -354,7 +451,13 @@ counts <- counts(dds['ENSG00000134460.11',], normalized = TRUE)
 col = c(High= "#453781FF", Intermediate= "#20A387FF", Low= "#B8DE29FF")
 m <- list(counts = as.numeric(counts), group= sampleCondition)
 m <- as_tibble(m)
-q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0))
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none") 
 q <- q + labs(x = "Activin Levels", y = "Normalized Counts ", title = "Expression of CD25/ ILR2A")
 q
+```
+
+
+```{r}
+ggsave("~/Desktop/Elizabeth_Figures/activin_CD25.tiff", plot = last_plot())
+write.csv(counts, "~/Desktop/Elizabeth_Figures/counts_activin_CD25.csv")
 ```
