@@ -73,7 +73,6 @@ library(DESeq2)
 ```
 
 
-
 ```{r message= FALSE, warning= FALSE, echo=FALSE}
 txdb <- makeTxDbFromGFF(file="~/Downloads/gencode.v19.annotation.gtf")
 saveDb(x=txdb, file = "gencode.v19.annotation.gtf_withproteinids.TxDb")
@@ -86,8 +85,8 @@ tx2gene <- select(txdb, k, "GENEID", "TXNAME")
 ## Control vs Platinum 
 
 ```{r message= FALSE, warning= FALSE, echo=FALSE}
-dir <- "~/Desktop/quants"
-samples <- read.csv(file= "~/Desktop/sample_info_tximport.csv")
+dir <- "~/Documents/Mythreye_Lab/quants"
+samples <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/sample_info_tximport.csv")
 files <- file.path(dir, samples$SRR, "quant.sf")
 all(file.exists(files))
 txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
@@ -95,7 +94,7 @@ names(txi)
 ```
 
 ```{r message= FALSE, warning= FALSE, echo=FALSE}
-sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth_Sample_meta.csv")
+sample_meta_data <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Elizabeth_Sample_meta.csv")
 sampleFiles <- samples$SRR
 sampleCondition <- sample_meta_data$Treatment
 sampleTable <- data.frame(sampleName = sampleFiles,
@@ -226,13 +225,12 @@ plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
 plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
 ```
 
-```{r message= FALSE, warning= FALSE, echo=FALSE}
-write.csv(as.data.frame(resOrdered), 
-          file="~/Desktop/platinum_vs_control.csv")
 
-vsd <- varianceStabilizingTransformation(dds)
-write.csv(assay(vsd), file="~/Desktop/counts_platinum_vs_control.csv", sep="\t")
+#### SOX2
+```{r echo=FALSE}
+plotCounts(dds, gene= "ENSG00000181449.2", intgroup="condition")
 ```
+
 
 ## Tumor vs Ascites vs Control
 
@@ -367,21 +365,17 @@ plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
 plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
 ```
 
-
+#### SOX2
 ```{r echo=FALSE}
-write.csv(as.data.frame(resOrdered), 
-          file="~/Desktop/tumor_vs_benign_vs_ascites.csv")
-
-vsd <- varianceStabilizingTransformation(dds)
-write.csv(assay(vsd), file="~/Desktop/counts_tumor_vs_benign_vs_ascites.csv", sep="\t")
+plotCounts(dds, gene= "ENSG00000181449.2", intgroup="condition")
 ```
 
 ## Group 2: Tumor vs Benign
 
 
 ```{r message= FALSE, warning= FALSE, echo=FALSE}
-dir <- "~/Desktop/quants"
-samples <- read.csv(file= "~/Desktop/data_import_benign_vs_tumor.csv")
+dir <- "~/Documents/Mythreye_Lab/quants"
+samples <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Benign_Tumor/data_import_benign_vs_tumor.csv")
 files <- file.path(dir, samples$SRR, "quant.sf")
 all(file.exists(files))
 txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
@@ -390,8 +384,7 @@ names(txi)
 
 
 ```{r echo=FALSE}
-library(DESeq2)
-sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth/Elizabeth_meta_benign_vs_tumor.csv")
+sample_meta_data <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Benign_Tumor/Elizabeth_meta_benign_vs_tumor.csv")
 ```
 
 ```{r echo=FALSE}
@@ -525,20 +518,17 @@ plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
 plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
 ```
 
-
-```{r message= FALSE, warning= FALSE, echo=FALSE}
-write.csv(as.data.frame(resOrdered), 
-          file="~/Desktop/tumor_vs_normal.csv")
-
-vsd <- varianceStabilizingTransformation(dds)
-write.csv(assay(vsd), file="~/Desktop/counts_tumor_vs_normal.csv", sep="\t")
+#### SOX2
+```{r echo=FALSE}
+plotCounts(dds, gene= "ENSG00000181449.2", intgroup="condition")
 ```
+
 
 ## Group 3: Ascites vs Benign 
 
 ```{r message= FALSE, warning= FALSE, echo=FALSE}
-dir <- "~/Desktop/quants"
-samples <- read.csv(file= "~/Desktop/data_import_ascites_vs_normal.csv")
+dir <- "~/Documents/Mythreye_Lab/quants"
+samples <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Benign_Tumor/data_import_ascites_vs_normal.csv")
 files <- file.path(dir, samples$SRR, "quant.sf")
 all(file.exists(files))
 txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
@@ -546,7 +536,7 @@ names(txi)
 ```
 
 ```{r echo=FALSE}
-sample_meta_data <- read.csv(file= "~/Desktop/Elizabeth_meta_ascites_vs_normal.csv")
+sample_meta_data <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Benign_Tumor/Elizabeth_meta_ascites_vs_normal.csv")
 ```
 
 ```{r message= FALSE, warning= FALSE, echo=FALSE}
@@ -682,10 +672,7 @@ plotCounts(dds, gene= "ENSG00000153563.11", intgroup="condition")
 plotCounts(dds, gene= "ENSG00000160654.5", intgroup="condition")
 ```
 
-```{r message= FALSE, warning= FALSE, echo=FALSE}
-#Saving normalized count files
-write.csv(as.data.frame(resOrdered), 
-          file="~/Desktop/ascites_vs_normal.csv")
-vsd <- varianceStabilizingTransformation(dds)
-write.csv(assay(vsd), file="~/Desktop/counts_ascites_vs_normal.csv", sep="\t")
+#### SOX2
+```{r echo=FALSE}
+plotCounts(dds, gene= "ENSG00000181449.2", intgroup="condition")
 ```

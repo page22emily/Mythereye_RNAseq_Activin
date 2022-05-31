@@ -1,0 +1,176 @@
+---
+title: "SOX2"
+output: html_document
+date: '2022-05-31'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+library(tximport)
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(DESeq2)
+library(tibble)
+library(ggplot2)
+```
+
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+txdb <- makeTxDbFromGFF(file="~/Downloads/gencode.v19.annotation.gtf")
+saveDb(x=txdb, file = "gencode.v19.annotation.gtf_withproteinids.TxDb")
+k <- keys(txdb, keytype = "TXNAME")
+tx2gene <- select(txdb, k, "GENEID", "TXNAME")
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dir <- "~/Documents/Mythreye_Lab/quants"
+samples <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/sample_info_tximport.csv")
+files <- file.path(dir, samples$SRR, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+sample_meta_data <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Elizabeth_Sample_meta.csv")
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+sampleFiles <- samples$SRR
+sampleCondition <- sample_meta_data$Tumor..Normal
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r echo=FALSE}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dds <- DESeq(dds)
+```
+
+#### SOX2
+```{r echo=FALSE}
+plotCounts(dds, gene= "ENSG00000181449.2", intgroup="condition")
+```
+
+
+```{r}
+counts <- counts(dds['ENSG00000181449.2',], normalized = TRUE)
+col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF", Ascites= "#B8DE29FF")
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
+q <- q + labs(y = "Normalized Counts", title = "Expression of SOX2")
+q
+```
+
+
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dir <- "~/Documents/Mythreye_Lab/quants"
+samples <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Benign_Tumor/data_import_benign_vs_tumor.csv")
+files <- file.path(dir, samples$SRR, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+```
+
+
+```{r echo=FALSE}
+sample_meta_data <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Benign_Tumor/Elizabeth_meta_benign_vs_tumor.csv")
+```
+
+```{r echo=FALSE}
+sampleFiles <- samples$SRR
+sampleCondition <- sample_meta_data$Tumor..Normal
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r echo=FALSE}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dds <- DESeq(dds)
+```
+
+#### SOX2
+```{r echo=FALSE}
+plotCounts(dds, gene= "ENSG00000181449.2", intgroup="condition")
+```
+
+
+```{r}
+counts <- counts(dds['ENSG00000181449.2',], normalized = TRUE)
+col = c(Benign_Tissue= "#453781FF" ,"Serous Ovarian Cancer Tumor"= "#20A387FF")
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
+q <- q + labs(y = "Normalized Counts", title = "Expression of SOX2")
+q
+```
+
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dir <- "~/Documents/Mythreye_Lab/quants"
+samples <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Benign_Tumor/data_import_ascites_vs_normal.csv")
+files <- file.path(dir, samples$SRR, "quant.sf")
+all(file.exists(files))
+txi <- tximport(files, type = "salmon", tx2gene= tx2gene, ignoreAfterBar= TRUE)
+names(txi)
+```
+
+```{r echo=FALSE}
+sample_meta_data <- read.csv(file= "~/Documents/Mythreye_Lab/Elizabeth/MetaData/Benign_Tumor/Elizabeth_meta_ascites_vs_normal.csv")
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+sampleFiles <- samples$SRR
+sampleCondition <- sample_meta_data$Tumor..Normal
+sampleTable <- data.frame(sampleName = sampleFiles,
+                          fileName = sampleFiles,
+                          condition = sampleCondition)
+sampleTable$condition <- factor(sampleTable$condition)
+```
+
+```{r echo=FALSE}
+colnames(txi$counts) <- rownames(sampleTable)
+```
+
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dds <- DESeqDataSetFromTximport(txi, sampleTable, ~condition)
+```
+```{r message= FALSE, warning= FALSE, echo=FALSE}
+dds <- DESeq(dds)
+```
+#### SOX2
+```{r echo=FALSE}
+plotCounts(dds, gene= "ENSG00000181449.2", intgroup="condition")
+```
+
+
+```{r}
+counts <- counts(dds['ENSG00000181449.2',], normalized = TRUE)
+col = c(Benign_Tissue= "#453781FF", Ascites= "#B8DE29FF")
+m <- list(counts = as.numeric(counts), group= sampleCondition)
+m <- as_tibble(m)
+q <- ggplot(m, aes(group, counts)) + geom_boxplot(aes(fill= group)) + geom_jitter(width = 0.1) + aes(color= group) + scale_fill_manual(values = alpha(col,.3)) +scale_color_manual(values = alpha(col, 1.0)) + theme(text = element_text(size = 13)) + theme(axis.text.y = element_text(size = 17)) + theme(legend.position="none")
+q <- q + labs(y = "Normalized Counts", title = "Expression of SOX2")
+q
+```
+```
